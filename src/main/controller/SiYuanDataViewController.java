@@ -16,6 +16,12 @@ import static main.utils.TerminalUtils.*;
 import static main.utils.TerminalUtils.terminalOutputWithGreen;
 
 public class SiYuanDataViewController {
+    /**
+     * Tab的空格数
+     * 在命令行终端中,一个Tab默认是8个空格
+     * 而在IDEAJ的终端中,一个Tab是4个空格
+     */
+    static int TAB_LENGTH = 8;
 
     /**
      * 创建随手记
@@ -95,7 +101,7 @@ public class SiYuanDataViewController {
         // TODO 可能存在属性不一样导致的读取错误.
         int tempValueLength;
         for (String key : tempBlockAttr.keySet()) {
-            tempValueLength = tempBlockAttr.get(key).toString().length() / 4 + 1;
+            tempValueLength = tempBlockAttr.get(key).toString().length() / TAB_LENGTH + 1;
             if (tempValueLength < 3) tabCounter.put(key, 3);
             else tabCounter.put(key, tempValueLength);
         }
@@ -110,7 +116,7 @@ public class SiYuanDataViewController {
     private static Map<String, Integer> calMaxOfTab(Map<String, Object> tempBlockAttr, Map<String, Integer> tabCounter) {
         int tempValueLength;
         for (String key : tempBlockAttr.keySet()) {
-            tempValueLength = tempBlockAttr.get(key).toString().length() / 4 + 1;
+            tempValueLength = tempBlockAttr.get(key).toString().length() / TAB_LENGTH + 1;
             try{
                 if (tabCounter.get(key) < tempValueLength) {
                     tabCounter.put(key, tempValueLength);
@@ -133,7 +139,7 @@ public class SiYuanDataViewController {
         int tabSum = 0;
         for (int i = 0; i < tableHead.size(); i++) {
             terminalOutputWithGreen(tableHead.get(i).replace("custom-",""));
-            int temp = tabCounter.get(tableHead.get(i)) - tableHead.get(i).replace("custom-","").length() / 4;
+            int temp = tabCounter.get(tableHead.get(i)) - tableHead.get(i).replace("custom-","").length() / TAB_LENGTH;
             tabSum = tabSum + tabCounter.get(tableHead.get(i));
             for (int j = 0; j < temp; j++) System.out.print("\t");
             //System.out.print("|");
@@ -147,8 +153,9 @@ public class SiYuanDataViewController {
             var tempblock = blocksWithAttrs.get(i);
             for (int j = 0; j < tableHead.size(); j++) {
                 var tempArrt = tempblock.get(tableHead.get(j));
-                terminalOutputWithGreen(tempArrt.toString());
-                int temp = tabCounter.get(tableHead.get(j)) - tempArrt.toString().length() / 4;
+                System.out.print(tempArrt.toString().trim());
+                //terminalOutputWithGreen(tempArrt.toString());
+                int temp = tabCounter.get(tableHead.get(j)) - tempArrt.toString().length() / TAB_LENGTH;
                 for (int p = 0; p < temp; p++) System.out.print("\t");
                 //System.out.print("|");
             }

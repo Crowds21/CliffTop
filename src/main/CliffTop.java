@@ -18,7 +18,7 @@ public class CliffTop {
 
     public static void main(String[] args) throws Exception {
         System.out.println("Personal Integrated Management System");
-        System.out.println("Last update date: 2021-10-5");
+        System.out.println("Last update date: 2021-10-15");
         Scanner input = new Scanner(System.in);
         String terminalInput;
         do {
@@ -26,6 +26,7 @@ public class CliffTop {
             terminalInput = input.nextLine();
             String[] getInput = terminalInput.split(" -");
             if (getInput.length < 2) {
+
             } else {
                 String command = getInput[0].trim();
                 String parameter = getInput[1].trim();
