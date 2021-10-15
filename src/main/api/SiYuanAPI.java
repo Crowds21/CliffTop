@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static main.utils.StringUtil.isNotEmpty;
+
 public class SiYuanAPI extends BaseAPI{
     private final static String SY_SERVER = "http://127.0.0.1:6806";
 
@@ -79,6 +81,75 @@ public class SiYuanAPI extends BaseAPI{
         String result = sendPostRequest(data,SY_SERVER, "/api/attr/setBlockAttrs");
         //将JSON数据转化为 RequestResult 对象
         return result;
+    }
+
+    /**
+     * 获取带有特定属性值的块ID
+     * @param customAttr
+     * @param customValue
+     * @return
+     * @throws Exception
+     */
+    public static ArrayList<SiYuanBlock> getBlocksWithAttr(String customAttr,String customValue) throws Exception {
+
+        String query = "SELECT * FROM blocks WHERE id in (SELECT block_id FROM attributes AS a  WHERE " +
+                "(a.name='custom-" + customAttr + "' AND a.value='" +customValue+"') GROUP BY block_id ) " +
+                "ORDER BY created DESC";
+        var blocksID = getBlocksOfSQLQuery(query);
+        return blocksID;
+    }
+
+    /**
+     * 获取带有特定是属性的块的ID
+     * @param customAttr
+     * @return
+     * @throws Exception
+     */
+    public static ArrayList<SiYuanBlock> getBlocksWithAttr(String customAttr) throws Exception {
+        String query = "SELECT * FROM blocks WHERE id in (SELECT block_id FROM attributes AS a  WHERE " +
+                "(a.name='custom-" + customAttr + "') GROUP BY block_id )";
+        var blocksID =  getBlocksOfSQLQuery(query);
+        return blocksID;
+    }
+
+    /**
+     * 获取传入的块的子块
+     * 对于空行则不会放入list中
+     *
+     * @param parentID
+     */
+    public static ArrayList<SiYuanBlock> getChildrenBlocks(String parentID) throws URISyntaxException, IOException, InterruptedException {
+        var noteBlocks = new ArrayList<SiYuanBlock>();
+        String query = "SELECT * FROM blocks WHERE parent_id='" + parentID + "' ORDER BY created DESC";
+        //获取其全部子块放入
+        var temp = SiYuanAPI.getBlocksOfSQLQuery(query);
+        for (int j = 0; j < temp.size(); j++) {
+            if (isNotEmpty(temp.get(j).getContent()))
+                noteBlocks.add(temp.get(j));
+        }
+        return noteBlocks;
+    }
+
+    /**
+     * 根据Markdown创建笔记
+     * @param notebook
+     * @param path
+     * @param markdown
+     * @return
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public static String createDocWithMd(String notebook,String path, String markdown) throws URISyntaxException, IOException, InterruptedException {
+        Map<String,Object> siyuanRequest = new HashMap<>();
+        siyuanRequest.put("notebook",notebook);
+        siyuanRequest.put("path",path);
+        siyuanRequest.put("markdown",markdown);
+        String data = toSiYuanJSON( siyuanRequest);
+        String result = sendPostRequest(data,SY_SERVER, "/api/filetree/createDocWithMd");
+        // 转换为Json对象
+        JSONObject jsonObject=JSON.parseObject(result);
+        return jsonObject.getString("data");
     }
 
     /**

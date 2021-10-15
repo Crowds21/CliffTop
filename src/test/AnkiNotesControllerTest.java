@@ -1,4 +1,4 @@
-package test;
+
 
 import main.controller.AnkiNotesController;
 import org.junit.jupiter.api.Test;

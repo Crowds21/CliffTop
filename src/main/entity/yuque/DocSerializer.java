@@ -1,2 +1,4 @@
-package main.entity.yuque;public class DocSerializer {
+package main.entity.yuque;
+
+public class DocSerializer {
 }

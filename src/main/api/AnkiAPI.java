@@ -20,8 +20,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AnkiAPI extends BaseAPI {
-
-    private final static String SY_SERVER = "http://127.0.0.1:8765";
+    /**
+     * Anki的端口
+     */
+    private final static String ANKI_SERVER = "http://127.0.0.1:8765";
 
     /**
      * 获取牌组名清单
@@ -86,14 +88,14 @@ public class AnkiAPI extends BaseAPI {
         var ankiRequest = new AnkiRequest(action,6);
         ankiRequest.setParams(ankiParams);
         String data = JSON.toJSONString(ankiRequest);
-        var result = sendPostRequest(data, SY_SERVER, "");
+        var result = sendPostRequest(data, ANKI_SERVER, "");
         return result;
     }
 
     private static String createAnkiRequest(String action) throws URISyntaxException, IOException, InterruptedException {
         var ankiRequest = new AnkiRequest(action,6);
         String data = JSON.toJSONString(ankiRequest);
-        var result = sendPostRequest(data, SY_SERVER, "");
+        var result = sendPostRequest(data, ANKI_SERVER, "");
         return result;
     }
 }

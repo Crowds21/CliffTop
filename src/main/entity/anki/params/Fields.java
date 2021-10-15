@@ -7,6 +7,8 @@ public class Fields {
     String front;
     @JSONField(name="Back",ordinal = 2)
     String back;
+    @JSONField(name="Backup",ordinal = 3)
+    String backup;
 
 
     public String getBack() {
@@ -23,5 +25,13 @@ public class Fields {
 
     public void setFront(String front) {
         this.front = front;
+    }
+
+    public String getBackup() {
+        return backup;
+    }
+
+    public void setBackup(String backup) {
+        this.backup = backup;
     }
 }

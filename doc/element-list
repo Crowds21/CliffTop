@@ -1,0 +1,12 @@
+main
+main.api
+main.common
+main.common.enums
+main.common.exceptions
+main.controller
+main.entity.anki
+main.entity.anki.params
+main.entity.siyuan
+main.entity.yuque
+main.service
+main.utils

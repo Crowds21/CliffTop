@@ -1,2 +1,4 @@
-package main.api;public class YuQueAPI {
+package main.api;
+
+public class YuQueAPI {
 }
