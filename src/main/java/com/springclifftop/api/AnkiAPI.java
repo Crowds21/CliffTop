@@ -67,6 +67,7 @@ public class AnkiAPI extends BaseAPI {
 
     /**
      * 创建Request,并发送请求
+     * 懒得改了,就先用baseAPI吧.
      * @param ankiParams
      * @param action
      * @return
@@ -88,8 +89,10 @@ public class AnkiAPI extends BaseAPI {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         return result;
     }
+
 
     private String createAnkiRequest(String action){
         var ankiRequest = new AnkiRequest(action,6);

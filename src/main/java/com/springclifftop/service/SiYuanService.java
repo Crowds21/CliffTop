@@ -1,73 +1,107 @@
 package com.springclifftop.service;
 
+import com.springclifftop.api.SYNewAPI;
 import com.springclifftop.api.SiYuanAPI;
-import com.springclifftop.common.Constant;
 import com.springclifftop.domain.entity.siyuan.SiYuanBlock;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
 import org.apache.commons.exec.DefaultExecutor;
-import org.apache.commons.exec.ExecuteWatchdog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.springclifftop.utils.StringUtil.isNotEmpty;
 
 @Component
 public class SiYuanService {
 
     @Autowired
-    private SiYuanAPI siYuanAPI;
+    private SYNewAPI siYuanAPI;
 
+    @Value("${siyuan.notebook}")
+    private String notebook;
+    @Value("${siyuan.project}")
+    private String project;
+
+
+
+
+    public Object[] lsNoteBooks() {
+        siYuanAPI.lsNoteBooks();
+        return null;
+    }
+
+    /**
+     * 返回带有特定K-V的块
+     * @param customAttr
+     * @param customValue
+     * @return
+     */
     public ArrayList<SiYuanBlock> getBlocksWithAttr(String customAttr, String customValue) {
-        return siYuanAPI.getBlocksWithAttr(customAttr, customValue);
+        String query = "SELECT * FROM blocks WHERE id in (SELECT block_id FROM attributes AS a  WHERE " +
+                "(a.name='custom-" + customAttr + "' AND a.value='" +customValue+"') GROUP BY block_id ) " +
+                "ORDER BY created DESC";
+        var blocks = siYuanAPI.sqlQuery(query);
+        return blocks;
     }
 
     public ArrayList<SiYuanBlock> getChildrenBlocks(String parentID) {
-        return siYuanAPI.getChildrenBlocks(parentID);
+        var noteBlocks = new ArrayList<SiYuanBlock>();
+        String query = "SELECT * FROM blocks WHERE parent_id='" + parentID + "' ORDER BY created DESC";
+        //获取其全部子块放入
+        var temp = siYuanAPI.sqlQuery(query);
+        for (int j = 0; j < temp.size(); j++) {
+            if (isNotEmpty(temp.get(j).getContent()))
+                noteBlocks.add(temp.get(j));
+        }
+        return noteBlocks;
     }
 
-    public void setValueOfBlockAttr(String id, String attrName,String attrValue){
-        siYuanAPI.setValueOfBlockAttr(id,"custom-"+attrName,attrValue);
+    public boolean setValueOfBlockAttr(String id, String attrName, String attrValue) {
+        var siyuanRequest = new HashMap<String,Object>();
+        var attrMap = new HashMap<>();
+        attrMap.put(attrName, attrValue);
+        if (siYuanAPI.setBlockAttrs(id,attrMap))
+            return true;
+        return false;
     }
 
-    public  String getValueOfSpecificAttr(String id, String attrName){
-        return siYuanAPI.getValueOfSpecificAttr(id,attrName);
+    public String getValueOfSpecificAttr(String id, String attrName) {
+        Map<String,String> siyuanAttrs = siYuanAPI.getBlockAttrs(id);
+        return siyuanAttrs.get(attrName);
     }
 
-    public  String createDocWithMd(String notebook,String path, String markdown){
-        return siYuanAPI.createDocWithMd(notebook,path,markdown);
+    public String createDocWithMd(String notebook, String path, String markdown) {
+        return siYuanAPI.createDocWithMd(notebook, path, markdown);
     }
 
     /**
      * 获取Project数据
-     *
      * @return
      */
     public ArrayList<Map> getProjects() {
-        var blocksWithAttrs = new ArrayList<Map>();
-        var blocks = siYuanAPI
-                .getBlocksWithAttrInSpecificPath("dataview","20210911205530-1dxsxsh");
-        //获取块属性
-        for (int i = 0; i < blocks.size(); i++) {
-            blocksWithAttrs.add(siYuanAPI.getAttrsOfBlock( blocks.get(i).getId() ));
-        }
-        return blocksWithAttrs;
+//        String sql = "SELECT * FROM blocks WHERE " +
+//                "path like '%/" + project + "/______________-_______.sy' " +
+//                "and type = 'd'";
+//        ArrayList<SiYuanBlock> blocks = siYuanAPI.sqlQuery(sql);
+        return null;
     }
 
-    public ArrayList<Map> getInbox(){
-        var blocksWithAttrs = new ArrayList<Map>();
-        var blocks = siYuanAPI
-                .getBlocksWithAttrInSpecificPath("dataview","20210911211409-pdpsdws");
-        //获取块属性
-        for (int i = 0; i < blocks.size(); i++) {
-            blocksWithAttrs.add(siYuanAPI.getAttrsOfBlock( blocks.get(i).getId() ));
-        }
-        return blocksWithAttrs;
+    public ArrayList<Map> getInbox() {
+//        var blocksWithAttrs = new ArrayList<Map>();
+//        var blocks = siYuanAPI
+//                .getBlocksWithAttrInSpecificPath("dataview", "20210911211409-pdpsdws");
+//        //获取块属性
+//        for (int i = 0; i < blocks.size(); i++) {
+//            blocksWithAttrs.add(siYuanAPI.getAttrsOfBlock(blocks.get(i).getId()));
+//        }
+//        return blocksWithAttrs;
+        return null;
     }
 
     /**
@@ -79,7 +113,7 @@ public class SiYuanService {
      */
     public ArrayList<Map> getTasks(String columName) {
         var tableRows = new ArrayList<Map>();
-        var blocks = siYuanAPI.getBlocksStartWithMD("#TODO%#");
+        var blocks = getBlocksStartWithMD("#TODO%#",project);
         for (int i = 0; i < blocks.size(); i++) {
             var tempMap = new HashMap<String, String>();
             String taskContent = blocks.get(i).getContent();
@@ -98,14 +132,29 @@ public class SiYuanService {
     }
 
     /**
+     * 获取Markdown中包含特定内容的块
+     * 该方法目前专供SiYuanController中的TaskView
+     * @param md
+     * @return
+     */
+    private  ArrayList<SiYuanBlock> getBlocksStartWithMD(String md,String pathID){
+        String query = "SELECT * FROM blocks WHERE type='p' AND markdown LIKE '" + md + "%' " +
+                "and path LIKE'%" + pathID + "%' " +
+                "ORDER BY content DESC LIMIT -1";
+        var blocks = siYuanAPI.sqlQuery(query);
+        return blocks;
+    }
+
+    /**
      * 打开文档
+     *
      * @param id
      */
-    public void openSiYuan(String id){
-        CommandLine cmdLine = new CommandLine("siyuan");
+    public void openSiYuan(String id) {
+        CommandLine cmdLine = new CommandLine("open");
         cmdLine.addArgument("${blockLink}");
         Map map = new HashMap();
-        map.put("blockLink","siyuan://blocks/"+id);
+        map.put("blockLink", "siyuan://blocks/" + id);
         cmdLine.setSubstitutionMap(map);
         // Handler 用于实现异步操作??
         DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
@@ -115,7 +164,7 @@ public class SiYuanService {
         //executor.setWatchdog(watchdog);
         executor.setExitValue(0);
         try {
-            executor.execute(cmdLine,resultHandler);
+            executor.execute(cmdLine, resultHandler);
             //resultHandler.waitFor();
         } catch (IOException e) {
             e.printStackTrace();

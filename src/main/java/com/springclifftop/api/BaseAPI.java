@@ -25,18 +25,23 @@ public class BaseAPI {
      * @throws InterruptedException
      */
     public static String sendPostRequest(String data , String baseURL, String uri) throws URISyntaxException, IOException, InterruptedException {
+        return sendPostRequest(data,baseURL + uri);
+    }
+
+    public static String sendPostRequest(String data,String URL) throws IOException, InterruptedException, URISyntaxException {
         HttpClient client = HttpClient.newBuilder()
                 .followRedirects(HttpClient.Redirect.ALWAYS).build();
         HttpRequest.BodyPublisher publisher = getPublisher(data);
         HttpRequest requet = HttpRequest.newBuilder()
-                .uri(new URI(baseURL+uri))
-                .header("Content-Type","application/json")
+                .uri(new URI(URL))
+                .header("Content-Type","application/json; charset=utf-8")
                 .POST(publisher)
                 .build();
         HttpResponse<String> response
                 = client.send(requet,HttpResponse.BodyHandlers.ofString());
         return response.body();
     }
+
 
     public static String sendPostRequest(String data , String baseURL, String uri,String userAgent,String xToken) throws URISyntaxException, IOException, InterruptedException {
         HttpClient client = HttpClient.newBuilder()
@@ -76,4 +81,6 @@ public class BaseAPI {
     public static HttpRequest.BodyPublisher getPublisher(String data){
         return HttpRequest.BodyPublishers.ofString(data);
     }
+
+
 }

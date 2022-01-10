@@ -5,7 +5,7 @@ import com.springclifftop.domain.entity.siyuan.SiYuanBlock;
 
 import java.util.ArrayList;
 
-public class SiYuanRespBlocks {
+public class SiYuanRespBlocks{
 
     @JSONField(name = "code")
     private int code;

@@ -29,6 +29,11 @@ public class SiYuanController {
     @Autowired
     CacheManager cacheManager;
 
+    @ShellMethod(key ="sy -ls",value = "ls notebooks.")
+    public void  lsNotebooks(){
+        siYuanService.lsNoteBooks();
+    }
+
     /**
      * 创建随手记
      * @throws Exception
@@ -50,6 +55,7 @@ public class SiYuanController {
 
     /**
      * ProjectView
+     * TODO Need to be constructed
      */
     @ShellMethod(key ="pv",value = "Show project data view.")
     public void projectView() {
@@ -70,7 +76,7 @@ public class SiYuanController {
     /**
      * Inbox View
      */
-    @ShellMethod(key ="bv",value = "Show Inbox data view.")
+    //@ShellMethod(key ="bv",value = "Show Inbox data view.")
     public void inBoxView() {
         // 表头信息
         ArrayList<String> tableHead = new ArrayList<>();
@@ -91,7 +97,7 @@ public class SiYuanController {
      *  TODO 这个方法是否应该属于Controller层,应该可以再封装一个放在其他层
      * @param
      */
-    @ShellMethod(key ="open",value = "Show tasks data view.")
+    @ShellMethod(key ="open",value = "open block.")
     public void openBlock(int num){
        var tablePrinter = cacheManager.getCache();
        var row = tablePrinter.getRow(num);
@@ -103,12 +109,11 @@ public class SiYuanController {
      *  TODO 这个方法是否应该属于Controller层,应该可以再封装一个放在其他层
      * @param
      */
-    @ShellMethod(key ="id",value = "Show tasks data view.")
+    @ShellMethod(key ="id",value = "open block")
     public void openBlock(String id){
         siYuanService.openSiYuan(id);
     }
 
-    //20211031153542-pr146no
 
     /**
      * 随机打开笔记块

@@ -37,14 +37,10 @@ public class AnkiController {
     public Boolean createNotes(){
         //获取带有Anki属性且为True
         ArrayList<SiYuanBlock> blocks = siYuanService.getBlocksWithAttr("anki","true");
-                //= SiYuanAPI.getIDsWithAttr("anki","true");
         for (int i = 0; i < blocks.size(); i++) {
             String parentID = blocks.get(i).getId();
-            //获取父块的其他属性
             var attrMap = getValueOfBlocksWithAnki(parentID);
-            //获取子块列表
             var childBlocks = siYuanService.getChildrenBlocks(parentID );
-            //基于属性,发送请求
             // TODO 此处应该返回成功添加的数据数,并在循环末尾一起输出
             ankiService.addAnkiNotesBasedOnAttr(attrMap, childBlocks);
             //设置完毕更改状态
@@ -63,7 +59,6 @@ public class AnkiController {
      * @return
      * @throws Exception
      */
-
     public Map getValueOfBlocksWithAnki(String id){
         String value = siYuanService.getValueOfSpecificAttr(id, "custom-ankiinfo");
         String[] templist = value.split("\\n");

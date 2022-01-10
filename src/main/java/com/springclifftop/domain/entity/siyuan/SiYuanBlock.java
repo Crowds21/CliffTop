@@ -16,6 +16,7 @@ public class SiYuanBlock {
     private String box;
     @JSONField(name = "hpath")
     private String hpath;
+    private String path;
     @JSONField(name = "name")
     private String name;
     @JSONField(name = "alias")
@@ -209,7 +210,11 @@ public class SiYuanBlock {
         this.updated = updated;
     }
 
+    public String getPath() {
+        return path;
+    }
 
-
-
+    public void setPath(String path) {
+        this.path = path;
+    }
 }

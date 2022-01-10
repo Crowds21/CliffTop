@@ -16,14 +16,14 @@ public class TerminalUtils {
      * @param content
      */
     public static void terminalOutputWithGreen(String content){
-        colorfulOutputInTerminal(content,32);
+        colorfulOutputInTerminal(content+"\n",32);
     }
     /**
      * 通过Format输出棕色
      * @param content
      */
     public static void terminalOutputWithBrown(String content){
-        colorfulOutputInTerminal(content,33);
+        colorfulOutputInTerminal(content+"\n",33);
     }
 
     /**
@@ -47,7 +47,7 @@ public class TerminalUtils {
      * @param content
      */
     public static void terminalOutputWithCyan(String content){
-        colorfulOutputInTerminal(content,37);
+        colorfulOutputInTerminal(content+"\n",37);
     }
 
     /**

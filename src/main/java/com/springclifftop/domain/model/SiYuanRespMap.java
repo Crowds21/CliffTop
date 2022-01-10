@@ -14,7 +14,7 @@ public class SiYuanRespMap {
     @JSONField(name = "msg")
     private String msg;
     @JSONField(name = "data")
-    private Map<String,Object> data;
+    private HashMap<String,String> data;
 
     public SiYuanRespMap() {
         data = new HashMap();
@@ -36,11 +36,12 @@ public class SiYuanRespMap {
         this.msg = msg;
     }
 
-    public Map getData() {
+
+    public HashMap<String, String> getData() {
         return data;
     }
 
-    public void setData(Map data) {
+    public void setData(HashMap<String, String> data) {
         this.data = data;
     }
 }

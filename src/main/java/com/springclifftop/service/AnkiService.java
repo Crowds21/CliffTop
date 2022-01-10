@@ -81,7 +81,7 @@ public class AnkiService {
         for (int i = 0; i < siyuanBlocks.size(); i++) {
             var block = siyuanBlocks.get(i);
             tempMarkdown = block.getMarkdown();
-            // 去除删除线
+            // 去除删除线包含的文字
             if (tempMarkdown.contains("~~")) {
                 tempMarkdown = tempMarkdown.replaceAll("~~\\S~~", "");
                 siyuanBlocks.get(i).setMarkdown(tempMarkdown);

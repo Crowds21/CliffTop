@@ -39,7 +39,7 @@ public class SiYuanAPI extends BaseAPI{
      * @throws IOException
      * @throws InterruptedException
      */
-    public  Map<String,Object> getAttrsOfBlock(String id) {
+    public  HashMap<String,String> getAttrsOfBlock(String id) {
         String data;
         Map<String,Object> siyuanRequest = new HashMap<>();
         siyuanRequest.put("id",id);
@@ -70,7 +70,7 @@ public class SiYuanAPI extends BaseAPI{
      * @throws InterruptedException
      */
     public  String getValueOfSpecificAttr(String id, String attrName){
-        Map<String,Object> siyuanAttrs = getAttrsOfBlock(id);
+        Map<String,String> siyuanAttrs = getAttrsOfBlock(id);
         return siyuanAttrs.get(attrName).toString();
     }
 
@@ -160,17 +160,7 @@ public class SiYuanAPI extends BaseAPI{
         return noteBlocks;
     }
 
-    /**
-     * 获取Markdown中包含特定内容的块
-     * 该方法目前专供SiYuanController中的TaskView
-     * @param md
-     * @return
-     */
-    public  ArrayList<SiYuanBlock> getBlocksStartWithMD(String md){
-        String query = "SELECT * FROM blocks WHERE type='p' AND markdown LIKE '" + md + "%' ORDER BY content DESC LIMIT -1";
-        var blocks = getBlocksOfSQLQuery(query);
-        return blocks;
-    }
+
 
     /**
      * 根据Markdown创建笔记

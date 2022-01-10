@@ -16,6 +16,9 @@ repositories {
 dependencies {
     implementation 'org.springframework.shell:spring-shell-starter:2.0.1.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'junit:junit:4.13.1'
     implementation 'junit:junit:4.13.1'
     implementation 'com.alibaba:fastjson:1.2.76'
