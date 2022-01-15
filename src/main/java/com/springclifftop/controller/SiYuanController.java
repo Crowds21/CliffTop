@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -40,9 +43,9 @@ public class SiYuanController {
      */
     public void createShortNote(){
         Scanner input = new Scanner(System.in);//Scanner的实例化
-        terminalOutputWithGreen("Please Input Title/Tag");
+        terminalOutputWithGreen("Please Input Title/Tag \n");
         String title = input.nextLine();
-        terminalOutputWithGreen("Please Input Content:");
+        terminalOutputWithGreen("Please Input Content:\n");
         String markdown = input.nextLine();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");//设置日期格式
         String docName = df.format(new Date());
@@ -50,7 +53,7 @@ public class SiYuanController {
         // 这个可以封装到Service或其他层里,而不是放在Controller层中
         String docID = siYuanService.createDocWithMd("20210814102920-cidbif7", "/InBox/FromTerminal/" + docName, markdown);
 
-        terminalOutputWithGreen("CreateSuccess, DocID:" + docID + "\nPlease summarize and delete in time.");
+        terminalOutputWithGreen("CreateSuccess, DocID:" + docID + "\nPlease summarize and delete in time.\n");
     }
 
     /**
@@ -69,7 +72,7 @@ public class SiYuanController {
         // 获取可以被作为DataView输出的块属性
         var blocksWithAttrs = siYuanService.getProjects();
         var tablePrinter = new TablePrinter(tableHead,blocksWithAttrs);
-        tablePrinter.printTable(true);
+        tablePrinter.printTable();
         cacheManager.putCache(tablePrinter);
     }
 
@@ -88,7 +91,7 @@ public class SiYuanController {
 
         var blocksWithAttrs = siYuanService.getInbox();
         var tablePrinter = new TablePrinter(tableHead,blocksWithAttrs);
-        tablePrinter.printTable(true);
+        tablePrinter.printTable();
         cacheManager.putCache(tablePrinter);
     }
 
@@ -122,12 +125,10 @@ public class SiYuanController {
     public void randomBlock(){
         var tablePrinter = cacheManager.getCache();
         var tableSize = tablePrinter.getSize();
-
         Random random = new Random();
         var rowNum =random.nextInt(tableSize);
-
         var row = tablePrinter.getRow(rowNum);
-        System.out.println(row.get(Constant.NAME).toString());
+        tablePrinter.printRow( rowNum);
         siYuanService.openSiYuan(row.get(Constant.ID).toString());
     }
 
@@ -144,8 +145,19 @@ public class SiYuanController {
         //获取表体
         var tableRows = siYuanService.getTasks(Constant.NAME);
         var tablePrinter = new TablePrinter(tableHead,tableRows);
-        tablePrinter.printTable(true);
+        tablePrinter.printTable();
         cacheManager.putCache(tablePrinter);
     }
+
+    @ShellMethod(key ="tv",value = "Show tasks data view.")
+    public void convertURLCcheme(){
+
+    }
+
+    @GetMapping("/blocks/{id}")
+    public void openUrlScheme(@PathVariable String id){
+        siYuanService.openSiYuan(id);
+    }
+
 
 }

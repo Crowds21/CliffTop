@@ -16,7 +16,7 @@ public class BiProjectFields {
     Long deadLine;
     String blockid;
     //@JsonFormat(pattern="yyyy-MM-dd HH:mm")
-    String objective;
+    String area;
     String memo;
 
 
@@ -67,11 +67,11 @@ public class BiProjectFields {
     }
 
     public String getObjective() {
-        return objective;
+        return area;
     }
 
-    public void setObjective(String objective) {
-        this.objective = objective;
+    public void setObjective(String area) {
+        this.area = area;
     }
 
     public String getMemo() {

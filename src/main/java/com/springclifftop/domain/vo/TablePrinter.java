@@ -33,18 +33,15 @@ public class TablePrinter {
     }
 
     /**
-     * 输出表格
+     * 输出表格,前面默认带有序号.
      */
-    public void printTable(Boolean NEED_NUM) {
+    public void printTable() {
+        //计算缩进
         calTabCounter();
         //表头
         int tabSum = 0;
-
-        if(NEED_NUM){
-            TerminalUtils.terminalOutputWithGreen("Num");
-            System.out.print("\t");
-        }
-
+        TerminalUtils.terminalOutputWithGreen("Num");
+        System.out.print("\t");
         for (int i = 0; i < tableHead.size(); i++) {
             TerminalUtils.terminalOutputWithGreen(tableHead.get(i).replace("custom-",""));
             int temp = tabCounter.get(tableHead.get(i)) - tableHead.get(i).replace("custom-","").length() / TAB_LENGTH;
@@ -53,32 +50,31 @@ public class TablePrinter {
             //System.out.print("|");
         }
         System.out.print("\n");
+
         //表体
         for (int i = 0; i < tableRows.size(); i++) {
             var tempblock = tableRows.get(i);
-            //每一列
-            if(NEED_NUM){
-                TerminalUtils.terminalOutputWithGreen(i+"");
-                System.out.print("\t");
-            }
-            for (int j = 0; j < tableHead.size(); j++) {
-                var tempblockCol = tempblock.get(tableHead.get(j));
-                System.out.print(tempblockCol.toString().trim());
-                int temp = tabCounter.get(tableHead.get(j)) - tempblockCol.toString().length() / TAB_LENGTH;
-                for (int p = 0; p < temp; p++) System.out.print("\t");
-            }
-            System.out.print("\n");
+            tableRows.get(i).put("num",i);
+            printRow(i);
         }
+    }
+    public void printRow(int number){
+        var tempblock = tableRows.get(number);
+        //每一列
+        TerminalUtils.terminalOutputWithGreen(tempblock.get("num").toString());
+        System.out.print("\t");
+        for (int j = 0; j < tableHead.size(); j++) {
+            var tempblockCol = tempblock.get(tableHead.get(j));
+            System.out.print(tempblockCol.toString().trim());
+            int temp = tabCounter.get(tableHead.get(j)) - tempblockCol.toString().length() / TAB_LENGTH;
+            for (int p = 0; p < temp; p++) System.out.print("\t");
+        }
+        System.out.print("\n");
+    }
 
-    }
-    /**
-     * 输出带有序号标注的表格
-     */
-    public void printTable(){
-        printTable(false);
-    }
     /**
      * 计算tabCounter
+     * 并不包含Num列
      */
     private void calTabCounter(){
         Map<String, Object> tempBlockAttr;

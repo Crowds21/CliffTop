@@ -9,13 +9,14 @@ import com.springclifftop.domain.entity.feishu.bitable.BiRecord;
 import com.springclifftop.domain.entity.feishu.bitable.BitableData;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
 
-@RestController
+@Component
 public class FeiShuAPI extends BaseAPI{
 
     @Value("${feishu.appID}")

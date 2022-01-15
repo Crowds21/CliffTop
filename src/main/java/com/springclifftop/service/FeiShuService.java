@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 @Service
 public class FeiShuService {
@@ -41,9 +42,9 @@ public class FeiShuService {
         //TODO 缺少一个一个专门用来处理 tenantToken的类或方法
         String tenantAccessToken = feiShuAPI.getTenantAccessToken();
         syncFeiShuToSiYuan(tenantAccessToken);
-        TerminalUtils.terminalOutputWithGreen("FeiShu --> SiYuan. Finish.");
+        TerminalUtils.terminalOutputWithGreen("FeiShu --> SiYuan. Finish.\n");
         syncSiYuanToFeishu(tenantAccessToken);
-        TerminalUtils.terminalOutputWithGreen("SiYuan --> FeiShu. Finish.");
+        TerminalUtils.terminalOutputWithGreen("SiYuan --> FeiShu. Finish.\n");
     }
 
     private void syncFeiShuToSiYuan(String tenantAccessToken) {
@@ -96,14 +97,15 @@ public class FeiShuService {
                 BiProjectFields fields = new BiProjectFields();
                 fields.setName(block.getContent());
                 fields.setBlockid(block.getId());
+                fields.setSync(true);
                 String recordID = feiShuAPI.addBitableRecord(fields, tenantAccessToken);
 
                 HashMap<String, String> attrs = new HashMap<>();
                 attrs.put("custom-fs-record-id", recordID);
                 siYuanAPI.setBlockAttrs(docid, attrs);
 
-                TerminalUtils.terminalOutputWithCyan("addRecord:" + block.getContent());
-                TerminalUtils.terminalOutputWithCyan("setAttrs:" + recordID);
+                TerminalUtils.terminalOutputWithCyan("addRecord:" + block.getContent() + "\n");
+                TerminalUtils.terminalOutputWithCyan("setAttrs:" + recordID + "\n");
             }
         }
 

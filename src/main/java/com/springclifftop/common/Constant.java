@@ -6,6 +6,10 @@ public class Constant {
 
     // View
     /**
+     * DataView列- Number
+     */
+    final public static String NUM="num";
+    /**
      * DataView列-Project Name
      */
     final public static String NAME    = "name";
@@ -26,7 +30,7 @@ public class Constant {
      */
     final public static String ID= "id";
     /**
-     * DataView列- Project ID
+     * DataView列- task
      */
     final public static String TASK="task";
 

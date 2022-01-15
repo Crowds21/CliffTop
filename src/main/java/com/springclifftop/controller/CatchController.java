@@ -20,7 +20,7 @@ public class CatchController {
     @ShellMethod(key ="sc",value = "Show datas in cache .")
     public void showCache(){
         var tablePrinter = cacheManager.getCache();
-        tablePrinter.printTable(true);
+        tablePrinter.printTable();
     }
 
 }
