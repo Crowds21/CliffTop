@@ -13,7 +13,6 @@ import org.springframework.context.annotation.PropertySource;
 public class SpringCliffTopApplication {
 
     public static void main(String[] args) {
-        //new SpringApplicationBuilder().sources(SpringCliffTopApplication.class).web(WebApplicationType.NONE).run(args);
         SpringApplication.run(SpringCliffTopApplication.class, args);
     }
 
