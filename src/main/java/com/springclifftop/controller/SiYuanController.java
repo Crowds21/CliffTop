@@ -1,8 +1,11 @@
 package com.springclifftop.controller;
 
+import com.springclifftop.api.SYNewAPI;
+import com.springclifftop.api.SiYuanAPI;
 import com.springclifftop.common.Constant;
 import com.springclifftop.common.cacheManager.CacheManager;
 import com.springclifftop.domain.vo.TablePrinter;
+import com.springclifftop.service.AnkiService;
 import com.springclifftop.service.SiYuanService;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
@@ -30,12 +33,33 @@ public class SiYuanController {
     SiYuanService siYuanService;
 
     @Autowired
+    AnkiService ankiService;
+
+    @Autowired
     CacheManager cacheManager;
+
+    @Autowired
+    SYNewAPI siyuanAPI;
 
     @ShellMethod(key ="sy -ls",value = "ls notebooks.")
     public void  lsNotebooks(){
         siYuanService.lsNoteBooks();
     }
+
+
+    @ShellMethod(key ="tt",value = "Run sql query in SiYuan")
+    public void test(){
+        System.out.println("block ID:");
+        Scanner input = new Scanner(System.in);
+        String blockID = input.nextLine();
+        String sql = "SELECT * FROM blocks WHERE id = '" + blockID + "'";
+        var block = siyuanAPI.sqlQuery(sql);
+        var markdown = block.get(0).getMarkdown();
+        System.out.println( markdown);
+        markdown = AnkiService.convertLatex(markdown);
+        System.out.println( markdown);
+    }
+
 
     /**
      * 创建随手记
@@ -149,7 +173,7 @@ public class SiYuanController {
         cacheManager.putCache(tablePrinter);
     }
 
-    @ShellMethod(key ="tv",value = "Show tasks data view.")
+    @ShellMethod(key ="convert",value = "Show tasks data view.")
     public void convertURLCcheme(){
 
     }

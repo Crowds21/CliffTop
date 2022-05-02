@@ -29,8 +29,6 @@ public class SiYuanService {
     private String project;
 
 
-
-
     public Object[] lsNoteBooks() {
         siYuanAPI.lsNoteBooks();
         return null;
@@ -78,6 +76,10 @@ public class SiYuanService {
 
     public String createDocWithMd(String notebook, String path, String markdown) {
         return siYuanAPI.createDocWithMd(notebook, path, markdown);
+    }
+
+    public HashMap<String,String> getBlockAttrs(String id){
+        return siYuanAPI.getBlockAttrs(id);
     }
 
     /**
@@ -170,4 +172,5 @@ public class SiYuanService {
             e.printStackTrace();
         }
     }
+
 }

@@ -9,8 +9,8 @@ public class Params {
     private String modelName;
     @JSONField(ordinal = 2)
     private String deck;
-    @JSONField(name="isCloze",ordinal = 3)
-    private Boolean cloze;
+    @JSONField(ordinal = 3)
+    private String isCloze;
     @JSONField(ordinal = 4)
     private ArrayList<String> inOrderFields;
     @JSONField(ordinal = 5)
@@ -47,12 +47,12 @@ public class Params {
         this.deck = deck;
     }
 
-    public Boolean getCloze() {
-        return cloze;
+    public String getIsCloze() {
+        return isCloze;
     }
 
-    public void setCloze(Boolean cloze) {
-        cloze = cloze;
+    public void setIsCloze(String isCloze) {
+        this.isCloze = isCloze;
     }
 
     public ArrayList<String> getInOrderFields() {

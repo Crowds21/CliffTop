@@ -61,8 +61,8 @@ public class AnkiAPI extends BaseAPI {
      * @param ankiParams
      * @throws Exception
      */
-    public void addNote(Params ankiParams){
-        var result = createAnkiRequest(ankiParams,"addNotes");
+    public String addNote(Params ankiParams){
+        return createAnkiRequest(ankiParams,"addNotes");
     }
 
     /**
